@@ -2,14 +2,14 @@ import { useState } from 'react';
 
 const quickLinks = [
   { label: 'YouTube', icon: '▶', accent: 'pink', url: 'https://youtube.com' },
-  { label: 'Discord', icon: '◯', accent: 'purple', url: 'https://discord.com' },
-  { label: 'GitHub', icon: '⌘', accent: 'cyan', url: 'https://github.com' },
+  { label: 'Discord', icon: '◉', accent: 'purple', url: 'https://discord.com' },
+  { label: 'GitHub', icon: '∎', accent: 'cyan', url: 'https://github.com' },
   { label: 'Spotify', icon: '♫', accent: 'green', url: 'https://spotify.com' },
   { label: 'Google', icon: '🔍', accent: 'purple', url: 'https://google.com' },
-  { label: 'Reddit', icon: '◈', accent: 'pink', url: 'https://reddit.com' },
+  { label: 'Reddit', icon: '◇', accent: 'pink', url: 'https://reddit.com' },
 ];
 
-function HomePage({ onSearch, onNavigate }) {
+function HomePage({ onSearch, onNavigate, onOpenNewTab }) {
   const [query, setQuery] = useState('');
 
   const performSearch = (event) => {
@@ -71,7 +71,7 @@ function HomePage({ onSearch, onNavigate }) {
               key={link.label}
               type="button"
               className={`quick-link-card ${link.accent}`}
-              onClick={() => onNavigate(link.url)}
+              onClick={() => onOpenNewTab(link.url)}
               title={`Open ${link.label}`}
             >
               <span className="link-icon">{link.icon}</span>

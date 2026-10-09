@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
-function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, onUrlBarSubmit, onBack, onForward, onReload, currentUrl, canGoBack, canGoForward, children }) {
+function BrowserShell({ 
+  tabs, 
+  activeTabId, 
+  onSelectTab, 
+  onCloseTab, 
+  onNewTab, 
+  onUrlBarSubmit, 
+  onBack, 
+  onForward, 
+  onReload, 
+  currentUrl, 
+  canGoBack, 
+  canGoForward, 
+  children 
+}) {
   const [urlInput, setUrlInput] = useState(currentUrl);
 
   useEffect(() => {
@@ -9,7 +23,9 @@ function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, on
 
   const handleUrlSubmit = (e) => {
     e.preventDefault();
-    onUrlBarSubmit(urlInput);
+    if (urlInput.trim()) {
+      onUrlBarSubmit(urlInput);
+    }
   };
 
   const handleBackClick = () => {
@@ -24,6 +40,10 @@ function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, on
     onReload();
   };
 
+  const handleNewTabClick = () => {
+    onNewTab('home', 'New Tab', 'gx://home');
+  };
+
   return (
     <div className="browser-shell">
       {/* Browser Chrome */}
@@ -35,7 +55,7 @@ function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, on
               className={`control-btn ${!canGoBack ? 'disabled' : ''}`}
               onClick={handleBackClick}
               disabled={!canGoBack}
-              title="Back (Alt + Left Arrow)"
+              title="Back"
             >
               ←
             </button>
@@ -43,16 +63,16 @@ function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, on
               className={`control-btn ${!canGoForward ? 'disabled' : ''}`}
               onClick={handleForwardClick}
               disabled={!canGoForward}
-              title="Forward (Alt + Right Arrow)"
+              title="Forward"
             >
               →
             </button>
             <button 
               className="control-btn"
               onClick={handleReloadClick}
-              title="Reload (Ctrl + R)"
+              title="Reload"
             >
-              ⟳
+              ⟲
             </button>
           </div>
 
@@ -70,7 +90,7 @@ function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, on
             />
           </form>
 
-          <button className="menu-btn" title="Menu" onClick={() => alert('Menu opened')}>
+          <button className="menu-btn" title="Menu">
             ⋮
           </button>
         </div>
@@ -99,7 +119,11 @@ function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, on
               </div>
             ))}
           </div>
-          <button className="new-tab-btn" onClick={() => onNewTab('home', 'New Tab')} title="Open new tab">
+          <button 
+            className="new-tab-btn" 
+            onClick={handleNewTabClick} 
+            title="Open new tab"
+          >
             +
           </button>
         </div>

@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 const quickLinks = [
   { label: 'YouTube', icon: '▶', accent: 'pink', url: 'https://youtube.com' },
-  { label: 'Discord', icon: '◯', accent: 'purple', url: 'https://discord.com' },
-  { label: 'GitHub', icon: '⌘', accent: 'cyan', url: 'https://github.com' },
+  { label: 'Discord', icon: '◉', accent: 'purple', url: 'https://discord.com' },
+  { label: 'GitHub', icon: '∎', accent: 'cyan', url: 'https://github.com' },
   { label: 'Spotify', icon: '♫', accent: 'green', url: 'https://spotify.com' },
 ];
 
@@ -15,7 +15,7 @@ const trendingTopics = [
   'Dark mode search UI',
 ];
 
-function DashboardPage({ onNavigate, onSearch }) {
+function DashboardPage({ onNavigate, onSearch, onOpenNewTab }) {
   const [query, setQuery] = useState('');
 
   const handleSearch = (e) => {
@@ -23,6 +23,10 @@ function DashboardPage({ onNavigate, onSearch }) {
     if (query.trim()) {
       onSearch(query);
     }
+  };
+
+  const handleTrendingClick = (topic) => {
+    onSearch(topic);
   };
 
   return (
@@ -50,7 +54,7 @@ function DashboardPage({ onNavigate, onSearch }) {
                 key={link.label}
                 type="button"
                 className={`quick-link ${link.accent}`}
-                onClick={() => onNavigate(link.url)}
+                onClick={() => onOpenNewTab(link.url)}
                 title={`Open ${link.label}`}
               >
                 <span>{link.icon}</span>
@@ -64,7 +68,7 @@ function DashboardPage({ onNavigate, onSearch }) {
           <h4>Trending</h4>
           <ul className="trend-list">
             {trendingTopics.map((topic) => (
-              <li key={topic} onClick={() => onSearch(topic)} role="button" tabIndex="0">
+              <li key={topic} onClick={() => handleTrendingClick(topic)} role="button" tabIndex="0">
                 {topic}
               </li>
             ))}

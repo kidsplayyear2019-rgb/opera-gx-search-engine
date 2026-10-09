@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 const resultData = {
   default: [
@@ -63,12 +63,16 @@ const resultData = {
   ],
 };
 
-function ResultsPage({ query, onNavigate }) {
+function ResultsPage({ query, onNavigate, onOpenNewTab }) {
   const results = useMemo(() => {
     const key = (query || '').trim().toLowerCase();
     if (!key) return resultData.default;
     return resultData[key] || resultData.default;
   }, [query]);
+
+  const handleCardClick = (url) => {
+    onOpenNewTab(url);
+  };
 
   return (
     <main className="results-view">
@@ -78,7 +82,7 @@ function ResultsPage({ query, onNavigate }) {
           <article 
             key={idx} 
             className="result-card" 
-            onClick={() => onNavigate(item.url)}
+            onClick={() => handleCardClick(item.url)}
             role="button"
             tabIndex="0"
           >
@@ -86,7 +90,7 @@ function ResultsPage({ query, onNavigate }) {
             <h3>{item.title}</h3>
             <p>{item.snippet}</p>
             <div className="result-actions" onClick={(e) => e.stopPropagation()}>
-              <button type="button" onClick={() => onNavigate(item.url)}>Open in Tab</button>
+              <button type="button" onClick={() => handleCardClick(item.url)}>Open in Tab</button>
               <button type="button">Save</button>
             </div>
           </article>
