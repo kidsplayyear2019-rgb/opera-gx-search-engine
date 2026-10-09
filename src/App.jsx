@@ -88,11 +88,14 @@ function App() {
     return resultData[key] || resultData.default;
   }, [query]);
 
-  const submitSearch = (event) => {
-    event.preventDefault();
-    if (query.trim()) {
-      setActiveView('results');
-    }
+  const performSearch = (event) => {
+    if (event) event.preventDefault();
+    const trimmed = query.trim();
+    if (!trimmed) return;
+
+    const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(trimmed)}`;
+    window.open(googleUrl, '_blank', 'noopener,noreferrer');
+    setActiveView('results');
   };
 
   return (
@@ -100,17 +103,29 @@ function App() {
       <header className="topbar">
         <nav className="nav">
           <div className="nav-left">
-            <button className="nav-pill active" onClick={() => setActiveView('home')}>Home</button>
-            <button className="nav-pill" onClick={() => setActiveView('results')}>Results</button>
-            <button className="nav-pill" onClick={() => setActiveView('dashboard')}>GX Dashboard</button>
+            <button className={`nav-pill ${activeView === 'home' ? 'active' : ''}`} onClick={() => setActiveView('home')}>
+              Home
+            </button>
+            <button className={`nav-pill ${activeView === 'results' ? 'active' : ''}`} onClick={() => setActiveView('results')}>
+              Results
+            </button>
+            <button className={`nav-pill ${activeView === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveView('dashboard')}>
+              GX Dashboard
+            </button>
           </div>
           <div className="nav-right">
             <a href="https://mail.google.com" target="_blank" rel="noreferrer">Gmail</a>
             <a href="https://images.google.com" target="_blank" rel="noreferrer">Images</a>
             <button className="apps-button" aria-label="Google apps">
-              <span /><span /><span />
-              <span /><span /><span />
-              <span /><span /><span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
             </button>
             <button className="signin-button">Sign in</button>
           </div>
@@ -128,7 +143,7 @@ function App() {
             <span className="g-red">e</span>
           </div>
 
-          <form className="search-form" onSubmit={submitSearch}>
+          <form className="search-form" onSubmit={performSearch}>
             <div className="search-box">
               <svg className="search-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M10 2a8 8 0 015.95 13.3l4.37 4.37 1.41-1.41-4.37-4.37A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z" />
@@ -136,7 +151,7 @@ function App() {
               <input
                 type="search"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search Google or type a URL"
                 aria-label="Search"
               />
@@ -166,14 +181,14 @@ function App() {
         <main className="results-view">
           <div className="results-header">
             <div className="mini-logo">GX</div>
-            <form className="mini-search" onSubmit={submitSearch}>
+            <form className="mini-search" onSubmit={performSearch}>
               <svg className="search-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M10 2a8 8 0 015.95 13.3l4.37 4.37 1.41-1.41-4.37-4.37A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z" />
               </svg>
               <input
                 type="search"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(event) => setQuery(event.target.value)}
                 aria-label="Search results"
               />
             </form>
@@ -187,8 +202,8 @@ function App() {
                 <h3>{item.title}</h3>
                 <p>{item.snippet}</p>
                 <div className="result-actions">
-                  <button>Open</button>
-                  <button>Save</button>
+                  <button type="button">Open</button>
+                  <button type="button">Save</button>
                 </div>
               </article>
             ))}
@@ -217,7 +232,7 @@ function App() {
               <h4>Quick Links</h4>
               <div className="link-grid">
                 {quickLinks.map((link) => (
-                  <button key={link.label} className={`quick-link ${link.accent}`}>
+                  <button key={link.label} type="button" className={`quick-link ${link.accent}`}>
                     <span>{link.icon}</span>
                     {link.label}
                   </button>
@@ -242,7 +257,12 @@ function App() {
                 <h2>3.2k</h2>
               </div>
               <div className="sparkline" aria-hidden="true">
-                <span /><span /><span /><span /><span /><span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
               </div>
             </div>
 
@@ -268,10 +288,10 @@ function App() {
                 <div className="search-summary-box">
                   <input
                     value={query}
-                    onChange={(e) => setQuery(e.target.value)}
+                    onChange={(event) => setQuery(event.target.value)}
                     aria-label="Dashboard search"
                   />
-                  <button onClick={() => setActiveView('results')}>Search</button>
+                  <button type="button" onClick={() => performSearch()}>Search</button>
                 </div>
               </div>
             </div>
