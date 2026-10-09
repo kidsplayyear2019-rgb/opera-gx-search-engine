@@ -1,94 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GX Search</title>
     <meta
       name="description"
-      content="Opera GX-inspired Google-style search engine"
+      content="Opera GX-inspired Google search engine with dashboard views"
     />
+    <title>GX Search</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="page-shell">
-      <header class="topbar">
-        <nav class="topbar__nav" aria-label="Top navigation">
-          <a href="https://mail.google.com" target="_blank" rel="noreferrer">Gmail</a>
-          <a href="https://images.google.com" target="_blank" rel="noreferrer">Images</a>
-          <button class="apps-button" aria-label="Google apps">
-            <span></span><span></span><span></span>
-            <span></span><span></span><span></span>
-            <span></span><span></span><span></span>
-          </button>
-          <button class="signin-button">Sign in</button>
-        </nav>
-      </header>
-
-      <main class="hero" aria-label="Search engine">
-        <div class="logo" aria-label="Google wordmark">
-          <span class="color-blue">G</span>
-          <span class="color-red">o</span>
-          <span class="color-yellow">o</span>
-          <span class="color-blue">g</span>
-          <span class="color-green">l</span>
-          <span class="color-red">e</span>
-        </div>
-
-        <form class="search-form" action="https://www.google.com/search" method="get" target="_blank" role="search">
-          <div class="search-box">
-            <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M10 2a8 8 0 015.95 13.3l4.37 4.37 1.41-1.41-4.37-4.37A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"/>
-            </svg>
-            <input
-              type="search"
-              name="q"
-              aria-label="Search"
-              autocomplete="off"
-              spellcheck="false"
-              placeholder="Search Google or type a URL"
-            />
-            <button class="voice-button" type="button" aria-label="Search by voice">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 15a3 3 0 003-3V6a3 3 0 10-6 0v6a3 3 0 003 3zm5-3a1 1 0 112 0 7 7 0 01-6 6.93V21h-2v-2.07A7 7 0 017 12a1 1 0 112 0 5 5 0 0010 0zm-5 9a9 9 0 01-9-9 1 1 0 112 0 7 7 0 0014 0 1 1 0 112 0 9 9 0 01-9 9z"/>
-              </svg>
-            </button>
-            <button class="lens-button" type="button" aria-label="Search by image">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm2 0v14h12V5H6zm2.5 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm8 9.5l-3-3.5-2.5 2.9-1.8-2.1-2.7 3.7h10.0z"/>
-              </svg>
-            </button>
-          </div>
-
-          <div class="button-row">
-            <button type="submit">Google Search</button>
-            <button type="button" class="secondary-button" onclick="document.querySelector('.search-form input').value = 'Opera GX style search'; document.querySelector('.search-form').submit();">
-              I’m Feeling Lucky
-            </button>
-          </div>
-        </form>
-      </main>
-
-      <footer class="footer" aria-label="Footer">
-        <div class="footer__left">
-          <a href="https://about.google" target="_blank" rel="noreferrer">About</a>
-          <a href="https://ads.google.com" target="_blank" rel="noreferrer">Advertising</a>
-          <a href="https://smallbusiness.withgoogle.com" target="_blank" rel="noreferrer">Business</a>
-        </div>
-        <div class="footer__right">
-          <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">Privacy</a>
-          <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer">Terms</a>
-          <a href="https://support.google.com" target="_blank" rel="noreferrer">Settings</a>
-        </div>
-      </footer>
-    </div>
-
-    <script src="script.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
