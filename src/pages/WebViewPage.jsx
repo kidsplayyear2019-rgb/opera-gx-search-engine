@@ -5,7 +5,7 @@ function WebViewPage({ url }) {
         src={url}
         title="Web View"
         className="webview-iframe"
-        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-pointer-lock"
+        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation"
       />
     </div>
   );

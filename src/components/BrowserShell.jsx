@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, onUrlBarSubmit, currentUrl, children }) {
+function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, onUrlBarSubmit, onBack, onForward, onReload, currentUrl, canGoBack, canGoForward, children }) {
   const [urlInput, setUrlInput] = useState(currentUrl);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setUrlInput(currentUrl);
   }, [currentUrl]);
 
   const handleUrlSubmit = (e) => {
     e.preventDefault();
     onUrlBarSubmit(urlInput);
+  };
+
+  const handleBackClick = () => {
+    onBack();
+  };
+
+  const handleForwardClick = () => {
+    onForward();
+  };
+
+  const handleReloadClick = () => {
+    onReload();
   };
 
   return (
@@ -19,9 +31,29 @@ function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, on
         {/* Top Bar */}
         <div className="top-bar">
           <div className="browser-controls">
-            <button className="control-btn" title="Back">←</button>
-            <button className="control-btn" title="Forward">→</button>
-            <button className="control-btn" title="Reload">⟳</button>
+            <button 
+              className={`control-btn ${!canGoBack ? 'disabled' : ''}`}
+              onClick={handleBackClick}
+              disabled={!canGoBack}
+              title="Back (Alt + Left Arrow)"
+            >
+              ←
+            </button>
+            <button 
+              className={`control-btn ${!canGoForward ? 'disabled' : ''}`}
+              onClick={handleForwardClick}
+              disabled={!canGoForward}
+              title="Forward (Alt + Right Arrow)"
+            >
+              →
+            </button>
+            <button 
+              className="control-btn"
+              onClick={handleReloadClick}
+              title="Reload (Ctrl + R)"
+            >
+              ⟳
+            </button>
           </div>
 
           {/* URL Bar */}
@@ -38,7 +70,9 @@ function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, on
             />
           </form>
 
-          <button className="menu-btn" title="Menu">⋮</button>
+          <button className="menu-btn" title="Menu" onClick={() => alert('Menu opened')}>
+            ⋮
+          </button>
         </div>
 
         {/* Tabs Bar */}
@@ -58,13 +92,14 @@ function BrowserShell({ tabs, activeTabId, onSelectTab, onCloseTab, onNewTab, on
                     e.stopPropagation();
                     onCloseTab(tab.id);
                   }}
+                  title="Close tab"
                 >
                   ✕
                 </button>
               </div>
             ))}
           </div>
-          <button className="new-tab-btn" onClick={() => onNewTab('home', 'New Tab')}>
+          <button className="new-tab-btn" onClick={() => onNewTab('home', 'New Tab')} title="Open new tab">
             +
           </button>
         </div>

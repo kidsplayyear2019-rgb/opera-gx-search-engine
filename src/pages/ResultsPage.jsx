@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 const resultData = {
   default: [
@@ -74,13 +74,19 @@ function ResultsPage({ query, onNavigate }) {
     <main className="results-view">
       <section className="results-panel">
         <div className="results-stats">About {results.length * 15} results for "{query}"</div>
-        {results.map((item) => (
-          <article key={item.title} className="result-card" onClick={() => onNavigate(item.url)}>
+        {results.map((item, idx) => (
+          <article 
+            key={idx} 
+            className="result-card" 
+            onClick={() => onNavigate(item.url)}
+            role="button"
+            tabIndex="0"
+          >
             <div className="result-domain">{item.url}</div>
             <h3>{item.title}</h3>
             <p>{item.snippet}</p>
-            <div className="result-actions">
-              <button type="button" onClick={(e) => { e.stopPropagation(); onNavigate(item.url); }}>Open</button>
+            <div className="result-actions" onClick={(e) => e.stopPropagation()}>
+              <button type="button" onClick={() => onNavigate(item.url)}>Open in Tab</button>
               <button type="button">Save</button>
             </div>
           </article>

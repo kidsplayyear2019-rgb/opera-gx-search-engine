@@ -8,7 +8,7 @@ import WebViewPage from './pages/WebViewPage';
 
 function App() {
   const [tabs, setTabs] = useState([
-    { id: 1, type: 'home', title: 'GX Search', url: 'gx://home' }
+    { id: 1, type: 'home', title: 'GX Search', url: 'gx://home', history: ['gx://home'], historyIndex: 0 }
   ]);
   const [activeTabId, setActiveTabId] = useState(1);
   const [tabIdCounter, setTabIdCounter] = useState(2);
@@ -20,7 +20,9 @@ function App() {
       id: tabIdCounter,
       type,
       title,
-      url
+      url,
+      history: [url],
+      historyIndex: 0
     };
     setTabs([...tabs, newTab]);
     setActiveTabId(tabIdCounter);
@@ -37,9 +39,66 @@ function App() {
   };
 
   const updateTab = (tabId, updates) => {
-    setTabs(tabs.map(tab =>
-      tab.id === tabId ? { ...tab, ...updates } : tab
-    ));
+    setTabs(tabs.map(tab => {
+      if (tab.id === tabId) {
+        const updated = { ...tab, ...updates };
+        // Update history if URL changed
+        if (updates.url && updates.url !== tab.url) {
+          const newHistory = tab.history.slice(0, tab.historyIndex + 1);
+          newHistory.push(updates.url);
+          updated.history = newHistory;
+          updated.historyIndex = newHistory.length - 1;
+        }
+        return updated;
+      }
+      return tab;
+    }));
+  };
+
+  const goBack = () => {
+    if (!activeTab) return;
+    if (activeTab.historyIndex > 0) {
+      const newIndex = activeTab.historyIndex - 1;
+      const url = activeTab.history[newIndex];
+      setTabs(tabs.map(tab =>
+        tab.id === activeTabId
+          ? { ...tab, historyIndex: newIndex, url, ...getPageType(url) }
+          : tab
+      ));
+    }
+  };
+
+  const goForward = () => {
+    if (!activeTab) return;
+    if (activeTab.historyIndex < activeTab.history.length - 1) {
+      const newIndex = activeTab.historyIndex + 1;
+      const url = activeTab.history[newIndex];
+      setTabs(tabs.map(tab =>
+        tab.id === activeTabId
+          ? { ...tab, historyIndex: newIndex, url, ...getPageType(url) }
+          : tab
+      ));
+    }
+  };
+
+  const reload = () => {
+    if (!activeTab) return;
+    // Reload just re-renders the current page, so nothing special needed
+  };
+
+  const getPageType = (url) => {
+    if (url === 'gx://home') {
+      return { type: 'home', title: 'GX Search' };
+    } else if (url.startsWith('gx://search')) {
+      const params = new URLSearchParams(url.split('?')[1]);
+      const query = params.get('q') || '';
+      return { type: 'results', title: `Search: ${query}`, query };
+    } else if (url === 'gx://dashboard') {
+      return { type: 'dashboard', title: 'GX Dashboard' };
+    } else if (url.startsWith('http://') || url.startsWith('https://')) {
+      return { type: 'webview', title: url };
+    }
+    return { type: 'home', title: 'GX Search' };
   };
 
   const handleSearch = (query) => {
@@ -53,25 +112,11 @@ function App() {
   };
 
   const handleNavigate = (url) => {
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      updateTab(activeTabId, {
-        type: 'webview',
-        title: url,
-        url
-      });
-    } else if (url === 'gx://home') {
-      updateTab(activeTabId, {
-        type: 'home',
-        title: 'GX Search',
-        url: 'gx://home'
-      });
-    } else if (url === 'gx://dashboard') {
-      updateTab(activeTabId, {
-        type: 'dashboard',
-        title: 'GX Dashboard',
-        url: 'gx://dashboard'
-      });
-    }
+    const pageInfo = getPageType(url);
+    updateTab(activeTabId, {
+      url,
+      ...pageInfo
+    });
   };
 
   const handleUrlBarSubmit = (url) => {
@@ -89,6 +134,8 @@ function App() {
   };
 
   const renderPageContent = () => {
+    if (!activeTab) return null;
+    
     switch (activeTab.type) {
       case 'home':
         return <HomePage onSearch={handleSearch} onNavigate={handleNavigate} />;
@@ -97,7 +144,7 @@ function App() {
       case 'dashboard':
         return <DashboardPage onNavigate={handleNavigate} onSearch={handleSearch} />;
       case 'webview':
-        return <WebViewPage url={activeTab.url} />;
+        return <WebViewPage url={activeTab.url} key={activeTab.url} />;
       default:
         return <HomePage onSearch={handleSearch} onNavigate={handleNavigate} />;
     }
@@ -111,7 +158,12 @@ function App() {
       onCloseTab={closeTab}
       onNewTab={addTab}
       onUrlBarSubmit={handleUrlBarSubmit}
+      onBack={goBack}
+      onForward={goForward}
+      onReload={reload}
       currentUrl={activeTab?.url || 'gx://home'}
+      canGoBack={activeTab && activeTab.historyIndex > 0}
+      canGoForward={activeTab && activeTab.historyIndex < activeTab.history.length - 1}
     >
       {renderPageContent()}
     </BrowserShell>

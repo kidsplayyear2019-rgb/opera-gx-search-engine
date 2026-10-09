@@ -51,6 +51,7 @@ function DashboardPage({ onNavigate, onSearch }) {
                 type="button"
                 className={`quick-link ${link.accent}`}
                 onClick={() => onNavigate(link.url)}
+                title={`Open ${link.label}`}
               >
                 <span>{link.icon}</span>
                 {link.label}
@@ -63,7 +64,9 @@ function DashboardPage({ onNavigate, onSearch }) {
           <h4>Trending</h4>
           <ul className="trend-list">
             {trendingTopics.map((topic) => (
-              <li key={topic}>{topic}</li>
+              <li key={topic} onClick={() => onSearch(topic)} role="button" tabIndex="0">
+                {topic}
+              </li>
             ))}
           </ul>
         </div>
